@@ -1,9 +1,16 @@
-const mysql = require('mysql2');
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const {Sequelize} =require('sequelize')
+const sequelize = new Sequelize('safertek', 'root', 'mysql@R1', {
+  host: 'localhost',
+  dialect: 'mysql',
 });
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
 
-module.exports = db;
+testConnection();
+module.exports = sequelize;

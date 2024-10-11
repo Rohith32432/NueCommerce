@@ -1,24 +1,31 @@
-const db = require('../config/db');
-const bcrypt = require('bcryptjs');
+const sequelize=require('../config/db')
+const { Model, DataTypes } = require('sequelize');
+class user extends Model {}
 
-const User = {
-  register: (username, email, password, callback) => {
-    const hashedPassword = bcrypt.hashSync(password, 8);
-    db.query(
-      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email, hashedPassword],
-      (error, results) => {
-        if (error) return callback(error);
-        callback(null, results);
-      }
-    );
-  },
-  findByEmail: (email, callback) => {
-    db.query('SELECT * FROM users WHERE email = ?', [email], (error, results) => {
-      if (error) return callback(error);
-      callback(null, results[0]);
-    });
-  },
-};
 
-module.exports = User;
+ user.init({
+  name:{
+    type:DataTypes.STRING,
+    allowNull: false,
+  },
+  email:{
+    type:DataTypes.STRING,
+    unique:true,
+    allowNull:false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    defaultValue: 'customer', // 'admin' or 'customer'
+  },
+},{
+  sequelize, modelName:'User'
+})
+
+
+
+
+module.exports=user

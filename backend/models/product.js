@@ -1,32 +1,35 @@
-const db = require('../config/db');
-
-const Product = {
-  getAll: (limit, offset, callback) => {
-    db.query('SELECT * FROM products LIMIT ? OFFSET ?', [limit, offset], callback);
+const sequelize=require('../config/db')
+const {DataTypes}=require('sequelize')
+const Product = sequelize.define('Product', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  getById: (id, callback) => {
-    db.query('SELECT * FROM products WHERE id = ?', [id], (error, results) => {
-      if (error) return callback(error);
-      callback(null, results[0]);
-    });
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
-  create: (name, description, price, imageUrl, callback) => {
-    db.query(
-      'INSERT INTO products (name, description, price, image_url) VALUES (?, ?, ?, ?)',
-      [name, description, price, imageUrl],
-      callback
-    );
+  category:{
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
-  update: (id, name, description, price, imageUrl, callback) => {
-    db.query(
-      'UPDATE products SET name = ?, description = ?, price = ?, image_url = ? WHERE id = ?',
-      [name, description, price, imageUrl, id],
-      callback
-    );
+  brand: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
-  delete: (id, callback) => {
-    db.query('DELETE FROM products WHERE id = ?', [id], callback);
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
-};
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+});
 
 module.exports = Product;

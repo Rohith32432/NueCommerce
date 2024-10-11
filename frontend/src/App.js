@@ -1,40 +1,41 @@
-import React, { useState } from 'react';
-import Auth from './components/Auth';
-import Header from './components/Header';
-import ProductList from './components/ProductList';
-import Cart from './components/Cart';
-
-const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [cart, setCart] = useState([]);
-
-  const handleAuth = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setCart([]);
-  };
-
-  const handleAddToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-  };
-
+import React from 'react'
+import NavBar from './components/NavBar'
+import {Route, Routes} from 'react-router-dom'
+import Login from './Auth/Login'
+import Product from './components/Product'
+import Cart from './components/Cart'
+import ProductsList from './components/ProductsList'
+import Profile from './components/Profile'
+import UserContext from './Context/UserContext'
+import Requried from './Context/Requried'
+import Home from './components/Home'
+import IndividualProduct from './components/IndividualProduct'
+function App() {
   return (
-    <div className="App"> 
-      {isAuthenticated ? (
-        <>
-          <Header onLogout={handleLogout} />
-          <ProductList onAddToCart={handleAddToCart} />
-          <Cart items={cart} />
-        </>
-      ) : (
-        <Auth onAuth={handleAuth} />
-      )}
-    </div>
-  );
-};
+   <>
+   {/* <Product/>
+   <Cart/>
+   <ProductsList/>
+   
+   <Profile/> */}
+    <UserContext>
+   <NavBar/>
+      {/* <Home/> */}
+   <Routes> 
+    {/* <Route path='/reg' element={<Re/>}/> */}
+    <Route path='/login' element={<Login/>}/>
+    <Route path='/' element={<Home/>}/>
+    <Route element={<Requried/>}>
+    <Route path='/Profile' element={<Profile/>}/>
+    <Route path='/cart' element={<Cart/>}/>
+    <Route path='/product/:id' element={<IndividualProduct/>}/>
+    </Route>
+    <Route path='*' element={        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">404 Not Found</h2>    }/>
+   </Routes>
+    </UserContext>
+   </>
 
-export default App;
+  )
+}
+
+export default App
