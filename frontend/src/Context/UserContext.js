@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 
 const context=createContext(null)
 function UserContext({children}) {
-    const [user,setuser]=useState() 
+    const [user,setuser]=useState({}) 
     const {pathname}=useLocation()
 
     // console.log(pathname);
@@ -19,12 +19,11 @@ function UserContext({children}) {
        const {data}=await axios.get('http://localhost:3004/api/user/profile',config)
        setuser(data)
        
-        console.log(data);
         
     }
     useEffect(()=>{
         settoken(localStorage.getItem('token')) 
-        if(user) { getuser()}
+        if(token) { getuser()}
     },[pathname])
   return (
     <context.Provider value={{user,setuser,token}} >

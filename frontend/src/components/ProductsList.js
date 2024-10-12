@@ -11,7 +11,7 @@ const fetchproducts= async ()=>{
   // const {data}=await axios.get('https://dummyjson.com/products/category/laptops?page=2')
   const {data}=await  axios.get('http://localhost:3004/api/products')
  setproduct([...data]) 
-console.log(data);
+// console.log(data);
 
 //  console.log(data);
  

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import CallApis from '../Useful/CallApi';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const { postdata } = CallApis(); 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   async function login(e) {
     e.preventDefault();
     const formdata = new FormData(e.target);
@@ -15,15 +18,16 @@ function Auth() {
     };
     
     try {
-      const response = await postdata('login',userdetails);
+      const response = await postdata('login', userdetails);
       console.log('Login successful:', response);
-      if(response.status ) {
-        localStorage.setItem('token',response.data.token)
-        navigate('/profile')
+      if (response.status) {
+        localStorage.setItem('token', response.data.token);
+        toast.success('Login successful!');
+        navigate('/');
       }
-      
     } catch (error) {
       console.error('Login failed:', error);
+      toast.error('Login failed. Please check your credentials.');
     }
   }
 
@@ -37,15 +41,15 @@ function Auth() {
     };
 
     try {
-      const response = await postdata('register',userdetails);
+      const response = await postdata('register', userdetails);
       console.log('Registration successful:', response);
-      if(response.status ) {
-        // console.log(response.status);
-        
-        navigate('/profile')
+      if (response.status) {
+        toast.success('Registration successful! Redirecting to login...');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Registration failed:', error);
+      toast.error('Registration failed. Please try again.');
     }
   }
 
@@ -154,6 +158,8 @@ function Auth() {
           </button>
         </div>
       </div>
+
+      <ToastContainer /> {/* Toast container to render the toast notifications */}
     </div>
   );
 }

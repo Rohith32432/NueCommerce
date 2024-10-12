@@ -3,21 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CallApis from '../Useful/CallApi';
 import { useAuth } from '../Context/UserContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function IndividualProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {user}=useAuth()
-const {postdata}=CallApis()
+  const { user } = useAuth();
+  const { postdata } = CallApis();
+
   const fetchProduct = async () => {
     try {
       const { data } = await axios.get(`http://localhost:3004/api/products/${id}`);
       setProduct(data);
       setLoading(false);
       console.log(data);
-      
     } catch (err) {
       setError('Failed to load product');
       setLoading(false);
@@ -31,31 +33,35 @@ const {postdata}=CallApis()
   if (loading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
-  const handleBuyNow = async() => {
-    alert(`Proceed to buy: ${product.title}`);
+  const handleBuyNow = async () => {
+    // alert(`Proceed to buy: ${product.title}`);
     try {
-      const { data } = await axios.post(`http://localhost:3004/api/orders/`,{
-        userId:user?.id,
-        productId:id,
-        status:'confrim'
+      const { data } = await axios.post(`http://localhost:3004/api/orders/`, {
+        userId: user?.id,
+        productId: id,
+        status: 'confirm',
       });
-     
+      toast.success(`Successfully purchased`);
       console.log(data);
-      
     } catch (err) {
-      setError('Failed to load product');
-  
+      setError('Failed to process the purchase');
+      toast.error('Failed to process the purchase');
     }
   };
 
-  const handleAddToCart = async() => {
-    const response=await postdata('/addtocart',{
-        quant:product.stock,
-        uid:user.id,
-        pid:id,
-    })
-    console.log(response);
-    
+  const handleAddToCart = async () => {
+    try {
+      const response = await postdata('/addtocart', {
+        quant: product.stock,
+        uid: user.id,
+        pid: id,
+      });
+      toast.success(` added to cart!`);
+      console.log(response);
+    } catch (err) {
+      toast.error('Failed to add product to cart');
+      console.error(err);
+    }
   };
 
   return (
@@ -68,13 +74,13 @@ const {postdata}=CallApis()
               alt={product.title}
               className="w-full max-w-sm object-cover rounded-lg shadow-lg"
             />
-          ):
-          <img
+          ) : (
+            <img
               src={product.imageUrl}
               alt={product.title}
               className="w-full max-w-sm object-cover rounded-lg shadow-lg"
             />
-          }
+          )}
         </div>
 
         <div className="space-y-4">
@@ -179,6 +185,7 @@ const {postdata}=CallApis()
           </div>
         </div>
       )}
+      <ToastContainer /> {/* Toast notifications container */}
     </div>
   );
 }

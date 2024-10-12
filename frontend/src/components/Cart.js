@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import CallApis from '../Useful/CallApi';
 import { useAuth } from '../Context/UserContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const { getdata ,deleterequest} = CallApis();
-const {user}=useAuth()
+  const { getdata, deleterequest } = CallApis();
+  const { user } = useAuth();
 
   const fetchProduct = async () => {
     try {
       const data = await getdata(`/cart/${user.id}`);
-      setCartItems(data);
+      setCartItems(data.map(item => ({ ...item, quantity: 1 })));
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      toast.error("Failed to load cart items.");
     }
   };
-   
-  
 
   const updateQuantity = (id, delta) => {
     setCartItems((prevItems) =>
@@ -26,17 +27,19 @@ const {user}=useAuth()
           : item
       )
     );
+    toast.info(`Quantity updated.`);
   };
-  async function dleteitem(id) {
-    try {
-      const data = await deleterequest('/cart/'+id);
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
 
-      
+  const deleteItem = async (id) => {
+    try {
+      await deleterequest(`/cart/${id}`);
+      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+      toast.success("Item removed from cart.");
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      toast.error("Failed to remove item from cart.");
     }
-  }
+  };
 
   useEffect(() => {
     fetchProduct();
@@ -78,7 +81,10 @@ const {user}=useAuth()
                     </div>
                   </div>
                   <div className="text-lg font-semibold text-gray-800">${(item.Product.price * item.quantity).toFixed(2)}</div>
-                  <button  onClick={()=>{dleteitem(item.id)}} className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-500 focus:outline-none focus:ring focus:ring-red-300">
+                  <button 
+                    onClick={() => deleteItem(item.id)} 
+                    className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-500 focus:outline-none focus:ring focus:ring-red-300"
+                  >
                     Remove
                   </button>
                 </div>
@@ -96,6 +102,8 @@ const {user}=useAuth()
           <p className="text-gray-600 text-center">Your cart is empty.</p>
         )}
       </div>
+
+      <ToastContainer /> {/* Toast notifications container */}
     </div>
   );
 }

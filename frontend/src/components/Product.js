@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Product({data}) {
+function Product({data,type}) {
   // console.log(data);
   const navigate=useNavigate()
   function handleclick(){
