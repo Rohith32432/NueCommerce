@@ -8,6 +8,8 @@ function Profile() {
   const [data,setdata]=useState({})
   async function get(){
     const data= await getdata('profile')
+    console.log(data);
+    
    setdata(data)
   }
   useEffect(()=>{

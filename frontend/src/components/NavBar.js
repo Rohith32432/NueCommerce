@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/UserContext';
 import Search from './Search';
+import Filter from './Filter';
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ function NavBar() {
           <Link to="/" className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Home</Link>
           <Link to="/cart" className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">cart</Link>
           <Link to="/Profile" className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Profile</Link>
+          <Link to="/order" className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">orders</Link>
           <Link to={'/'} onClick={logout} className="text-black hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium">Log Out</Link>
         </>
       );
@@ -49,12 +51,18 @@ function NavBar() {
             </div>
           </div>
           {
-            token &&
-          <div className="hidden md:block">
+            token &&(
+              <>
+              
+              <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
+              <Filter/>
+             
              <Search/>
             </div>
           </div>
+              </>
+            )
           }
           <div className="-mr-2 flex md:hidden">
             <button

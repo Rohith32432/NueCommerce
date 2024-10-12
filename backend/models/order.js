@@ -1,16 +1,27 @@
-const db = require('../config/db');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const User = require('./user');
+const Product = require('./product');
 
-const Order = {
-  create: (userId, totalAmount, callback) => {
-    db.query(
-      'INSERT INTO orders (user_id, total_amount) VALUES (?, ?)',
-      [userId, totalAmount],
-      callback
-    );
+const Order = sequelize.define('Order', {
+  date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
-  getByUserId: (userId, callback) => {
-    db.query('SELECT * FROM orders WHERE user_id = ?', [userId], callback);
-  },
-};
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
+}, {
+  sequelize,
+  modelName: 'Order',
+});
+
+User.hasMany(Order, { foreignKey: 'userId' });
+Order.belongsTo(User, { foreignKey: 'userId' });
+
+Product.hasMany(Order, { foreignKey: 'productId' });
+Order.belongsTo(Product, { foreignKey: 'productId' });
 
 module.exports = Order;

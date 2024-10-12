@@ -1,6 +1,8 @@
 const Product = require('../models/product');
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs');
+const { findAll } = require('../models/user');
+const { Op } = require('sequelize');
 
 const createProduct = async (req, res) => {
     try {
@@ -78,6 +80,42 @@ const deleteProduct = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+async function getcategory(req,res) {
+    // res.json('ji')
+    
+    try {
+        const products = await Product.findAll({
+           attributes:['category'],
+           group:['category']
+        });
+       res.status(200).json(products)
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(404).json(error)
+    }
+}
+
+async function filter(req,res) {
+    const { category, limit } = req.body;  
+
+    try {
+        const filteredData = await Product.findAll({
+            where: {
+                [Op.and]: [
+                    category ? { category } : {}, // Only include if category is provided
+                    limit ? { price: { [Op.lte]: limit } } : {} // Filter price limit
+                ]
+            }
+        });
+
+        res.status(200).json(filteredData)
+        // return filteredData; 
+    } catch (error) {
+       res.status(404).json('message',error)
+        
+    }
+}
+
 
 module.exports = {
     createProduct,
@@ -85,4 +123,6 @@ module.exports = {
     getProductById,
     updateProduct,
     deleteProduct,
+    filter,
+    getcategory
 };

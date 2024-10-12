@@ -10,6 +10,9 @@ import UserContext from './Context/UserContext'
 import Requried from './Context/Requried'
 import Home from './components/Home'
 import IndividualProduct from './components/IndividualProduct'
+import Filter from './components/Filter'
+import FiterItems from './components/FiterItems'
+import Orders from './components/Orders'
 function App() {
   return (
    <>
@@ -28,7 +31,9 @@ function App() {
     <Route element={<Requried/>}>
     <Route path='/Profile' element={<Profile/>}/>
     <Route path='/cart' element={<Cart/>}/>
+    <Route path='/filter' element={<FiterItems/>}/>
     <Route path='/product/:id' element={<IndividualProduct/>}/>
+    <Route path='/order' element={<Orders/>}/>
     </Route>
     <Route path='*' element={        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">404 Not Found</h2>    }/>
    </Routes>

@@ -4,6 +4,7 @@ const Cart = require('../models/cart');
 const Product = require('../models/product');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
+const { genneratetoken } = require('../middleware/gentoken');
 
 const registerUser = async (req, res) => {
   try {
@@ -32,11 +33,8 @@ const loginUser = async (req, res) => {
     if (!pwdMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-    const token=jwt.sign({email:user.email},process.env.JWT_SECRET,{
-      expiresIn:'1d'
-    })
-
-    res.json({ message: 'Login successful',token });
+    const token=genneratetoken(user.email)
+    res.json({ message: 'Login successful',token,email:user.email });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });

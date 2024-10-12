@@ -1,6 +1,7 @@
 const User=require('../models/user')
 const Product=require('../models/product')
 const Cart=require('../models/cart')
+const Order =require('../models/order')
 const sequelize=require('./db')
 
 const status=process.env.status

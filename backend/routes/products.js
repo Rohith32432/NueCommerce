@@ -5,6 +5,8 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  filter,
+  getcategory,
 } = require('../controllers/ProductsController'); 
 const multer=require('multer')
 const path=require('path')
@@ -17,5 +19,6 @@ router.get('/', getAllProducts);
 router.get('/:id', getProductById);                 
 router.put('/:id', updateProduct);                 
 router.delete('/:id', deleteProduct);              
-
+router.get('/uid/category',getcategory)
+router.post('/filter',filter)
 module.exports = router;

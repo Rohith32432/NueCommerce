@@ -31,8 +31,21 @@ const {postdata}=CallApis()
   if (loading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async() => {
     alert(`Proceed to buy: ${product.title}`);
+    try {
+      const { data } = await axios.post(`http://localhost:3004/api/orders/`,{
+        userId:user?.id,
+        productId:id,
+        status:'confrim'
+      });
+     
+      console.log(data);
+      
+    } catch (err) {
+      setError('Failed to load product');
+  
+    }
   };
 
   const handleAddToCart = async() => {

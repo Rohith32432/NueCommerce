@@ -5,9 +5,10 @@ const morgan = require('morgan');
 require('dotenv').config();
 const userRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
+const orderRoutes = require('./routes/orderrouter');
+
 const app = express();
 // const Assosiactions =require('./config/Assosiactions')
-
 // const sync=require('./config/Assosiactions')
 
 app.use(cors());
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/image',express.static(`${__dirname}/uploads`))
 app.use('/api/user', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 
 const PORT = process.env.PORT || 3000;
